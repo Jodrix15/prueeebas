@@ -18,7 +18,7 @@ public class TokenProvider {
     @Value("${security.jwt.token.secret-key}")
     private String JWT_SECRET;
 
-    public String generateAccesToken(UserEntity user){
+    public String generateAccessToken(UserEntity user){
         try{
             Algorithm algorithm = Algorithm.HMAC256(JWT_SECRET);
             return JWT.create()
