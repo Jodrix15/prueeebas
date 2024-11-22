@@ -1,6 +1,7 @@
 package com.UserAuth.userAuth.enums;
 
 public enum UserRole {
+    SUPERADMIN("superadmin"),
     ADMIN("admin"),
     USER("user");
 

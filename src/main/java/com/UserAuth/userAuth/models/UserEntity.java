@@ -45,9 +45,19 @@ public class UserEntity implements UserDetails{
         this.password = password;
         this.role = role;
     }
+    public UserEntity(String login, String password){
+        this.login = login;
+        this.password = password;
+        this.role = UserRole.SUPERADMIN;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UserRole.SUPERADMIN){
+            return  List.of(new SimpleGrantedAuthority("ROLE_SUPERADMIN"), 
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        }
         if(this.role == UserRole.ADMIN){
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
