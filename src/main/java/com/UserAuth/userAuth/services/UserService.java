@@ -1,12 +1,22 @@
 package com.UserAuth.userAuth.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.UserAuth.userAuth.dtos.SignUpDto;
+import com.UserAuth.userAuth.exceptions.UserAlreadyExistsException;
 import com.UserAuth.userAuth.models.UserEntity;
 import com.UserAuth.userAuth.repositories.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -19,34 +29,40 @@ public class UserService {
         return userRepository.findAll();
     }
 
-  
-    /*public ResponseEntity<UserEntity> getUserById(@PathVariable Long id){
-        Optional<UserEntity> user = userRepository.findById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public UserDetails createUser(SignUpDto data){
+        if (userRepository.findByLogin(data.login()) != null) {
+            throw new UserAlreadyExistsException("Username already exists");
+        }
+        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
+        UserEntity newUser = new UserEntity(data.login(), encryptedPassword, data.role());
+        return userRepository.save(newUser);
     }
 
+    public boolean deleteUserById(Long id) {
+    
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id); 
+            return true; 
+        } else {
+            return false; 
+        }
+    } 
 
-    public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user){
-        UserEntity saveUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(saveUser);
+    private UserEntity getUserById(Long id){
+
+        return userRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
+    }
+
+    public UserEntity updateUser(Long id, UserEntity updateUser){
         
+        getUserById(id);
+        userRepository.save(updateUser);
+        
+        return updateUser;
+        
+      
+               
     }
-
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
-        if(!userRepository.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-
-        userRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntity updateUser){
-        if(!userRepository.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-
-        UserEntity saveUser = userRepository.save(updateUser);
-        return ResponseEntity.ok(saveUser);*/
-    }
+}
 
