@@ -20,10 +20,12 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Table()
 @Entity(name = "users")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -34,21 +36,34 @@ public class UserEntity implements UserDetails{
     private Long id;
 
     private String login;
+    private String name;
+    private String usrname;
+    private String lastName;
+
+    private String phoneNumber;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public UserEntity(String login, String password, UserRole role){
+    public UserEntity(String login, String name,  String usrname, String lastName, String phoneNumber, String password, UserRole role){
         this.login = login;
+        this.name = name;
+        this.usrname = usrname;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.password = password;
         this.role = role;
     }
-    public UserEntity(String login, String password){
+    public UserEntity(String login, String name,  String usrname, String lastName, String phoneNumber, String password){
         this.login = login;
+        this.name = name;
+        this.usrname = usrname;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
         this.password = password;
-        this.role = UserRole.SUPERADMIN;
+        this.role = UserRole.USER;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class AuthService implements UserDetailsService {
             throw new UserAlreadyExistsException("Username already exists");
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        UserEntity newUser = new UserEntity(data.login(), encryptedPassword, data.role());
+        UserEntity newUser = new UserEntity(data.login(), data.name(), data.usrname(), data.lastName(), data.phoneNumber(), encryptedPassword, data.role());
         return userRepository.save(newUser);
     }
 

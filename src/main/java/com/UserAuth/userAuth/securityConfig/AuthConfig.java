@@ -27,7 +27,10 @@ public class AuthConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/*").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/users").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/users/*").hasRole("SUPERADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/users/*").hasAnyRole("SUPERADMIN", "ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/users/*").hasAnyRole("SUPERADMIN", "ADMIN", "USER")
+                .requestMatchers(HttpMethod.PUT, "/api/users/*").hasAnyRole("SUPERADMIN", "ADMIN", "USER")
                 .anyRequest().authenticated())
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();   

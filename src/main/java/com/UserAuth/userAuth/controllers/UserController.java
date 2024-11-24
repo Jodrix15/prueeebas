@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.UserAuth.userAuth.dtos.SignUpDto;
+import com.UserAuth.userAuth.dtos.UpdateUserDto;
 import com.UserAuth.userAuth.models.UserEntity;
 import com.UserAuth.userAuth.repositories.UserRepository;
 import com.UserAuth.userAuth.services.UserService;
@@ -60,17 +61,10 @@ public class UserController {
 
     @CrossOrigin
     @PutMapping("/{id}")
-    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntity updateUser){
+    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserDto updateUser){
 
         UserEntity savedUser = userService.updateUser(id, updateUser);
         return ResponseEntity.ok(savedUser); // 200 OK con el usuario actualizado 
     }
-
-    //mostrarDatos{username}
-
-    //usuario solo modificar su cuenta, y eliminarla (ya puede crearseala)
-
-    //superadmin todo. La lista de usuarios debe mostrar los datos de los mismos
-    //admin todo excepto dar de alta  a usuarios
 
 }
